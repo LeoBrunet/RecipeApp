@@ -14,6 +14,11 @@
 		6F9C1EA227C4C6240095D8C9 /* RecipeAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C1EA127C4C6240095D8C9 /* RecipeAppTests.swift */; };
 		6F9C1EAC27C4C6240095D8C9 /* RecipeAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C1EAB27C4C6240095D8C9 /* RecipeAppUITests.swift */; };
 		6F9C1EAE27C4C6240095D8C9 /* RecipeAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C1EAD27C4C6240095D8C9 /* RecipeAppUITestsLaunchTests.swift */; };
+		B1B3F68427C4CB0F00283E4C /* HomeRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B3F68327C4CB0F00283E4C /* HomeRecipeView.swift */; };
+		B1B3F68627C4CB2700283E4C /* RecipesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B3F68527C4CB2700283E4C /* RecipesView.swift */; };
+		B1B3F68827C4CB3500283E4C /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B3F68727C4CB3500283E4C /* RecipeView.swift */; };
+		B1B3F68A27C4CBE600283E4C /* IngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B3F68927C4CBE600283E4C /* IngredientsView.swift */; };
+		B1B3F68C27C4CC1800283E4C /* SalesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B3F68B27C4CC1800283E4C /* SalesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +49,11 @@
 		6F9C1EA727C4C6240095D8C9 /* RecipeAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipeAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F9C1EAB27C4C6240095D8C9 /* RecipeAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeAppUITests.swift; sourceTree = "<group>"; };
 		6F9C1EAD27C4C6240095D8C9 /* RecipeAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B1B3F68327C4CB0F00283E4C /* HomeRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRecipeView.swift; sourceTree = "<group>"; };
+		B1B3F68527C4CB2700283E4C /* RecipesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesView.swift; sourceTree = "<group>"; };
+		B1B3F68727C4CB3500283E4C /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
+		B1B3F68927C4CBE600283E4C /* IngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsView.swift; sourceTree = "<group>"; };
+		B1B3F68B27C4CC1800283E4C /* SalesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +104,8 @@
 		6F9C1E8F27C4C6230095D8C9 /* RecipeApp */ = {
 			isa = PBXGroup;
 			children = (
+				B1B3F68227C4C94C00283E4C /* Model */,
+				B1B3F68127C4C8D200283E4C /* View */,
 				6F9C1E9027C4C6230095D8C9 /* RecipeAppApp.swift */,
 				6F9C1E9227C4C6230095D8C9 /* ContentView.swift */,
 				6F9C1E9427C4C6230095D8C9 /* Assets.xcassets */,
@@ -125,6 +137,25 @@
 				6F9C1EAD27C4C6240095D8C9 /* RecipeAppUITestsLaunchTests.swift */,
 			);
 			path = RecipeAppUITests;
+			sourceTree = "<group>";
+		};
+		B1B3F68127C4C8D200283E4C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B1B3F68327C4CB0F00283E4C /* HomeRecipeView.swift */,
+				B1B3F68527C4CB2700283E4C /* RecipesView.swift */,
+				B1B3F68727C4CB3500283E4C /* RecipeView.swift */,
+				B1B3F68927C4CBE600283E4C /* IngredientsView.swift */,
+				B1B3F68B27C4CC1800283E4C /* SalesView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B1B3F68227C4C94C00283E4C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,8 +288,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1B3F68C27C4CC1800283E4C /* SalesView.swift in Sources */,
 				6F9C1E9327C4C6230095D8C9 /* ContentView.swift in Sources */,
+				B1B3F68A27C4CBE600283E4C /* IngredientsView.swift in Sources */,
 				6F9C1E9127C4C6230095D8C9 /* RecipeAppApp.swift in Sources */,
+				B1B3F68627C4CB2700283E4C /* RecipesView.swift in Sources */,
+				B1B3F68427C4CB0F00283E4C /* HomeRecipeView.swift in Sources */,
+				B1B3F68827C4CB3500283E4C /* RecipeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,12 +450,13 @@
 		6F9C1EB227C4C6240095D8C9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RecipeApp/Preview Content\"";
-				DEVELOPMENT_TEAM = T65CHC989U;
+				DEVELOPMENT_TEAM = LCZJRBP37C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -432,7 +469,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.leonicolas.RecipeApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolas.RecipeApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -443,12 +480,13 @@
 		6F9C1EB327C4C6240095D8C9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RecipeApp/Preview Content\"";
-				DEVELOPMENT_TEAM = T65CHC989U;
+				DEVELOPMENT_TEAM = LCZJRBP37C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -461,7 +499,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.leonicolas.RecipeApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolas.RecipeApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
