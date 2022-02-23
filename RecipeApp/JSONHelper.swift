@@ -43,7 +43,12 @@ struct JSONHelper{
     }
     
     static func get<T:Decodable>(url: String) async -> Result<T, JSONError>{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        
         guard let (data, _) =
                     try? await URLSession.shared.data(from: URL(string: "https://nicolas-ig.alwaysdata.net/api/" + url)!) else{
                         return .failure(.httpFailed)
