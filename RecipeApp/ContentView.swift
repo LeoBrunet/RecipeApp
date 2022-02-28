@@ -25,7 +25,7 @@ struct ContentView: View {
                     Image(systemName: "cart")
                     Text("Ventes")
                 }
-        }
+        }.accentColor(Color("Green"))
     }
 }
 
