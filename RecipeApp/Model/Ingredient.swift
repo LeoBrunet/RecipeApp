@@ -61,7 +61,7 @@ enum Allergen: Int, Codable{
     
 }
 
-enum IngredientType: Int, Codable{
+enum IngredientType: Int, Codable, CaseIterable{
     case Autre = 1
     case Poisson = 2
     case Viande = 3
@@ -89,9 +89,32 @@ enum IngredientType: Int, Codable{
         case .Légume:
             return "Légume"
         case .Champignon:
-            return "CHampignon"
+            return "Champignon"
         case .Liquide:
             return "Liquide"
+        }
+    }
+    
+    var icon: String{
+        switch self{
+        case .Autre:
+            return "food"
+        case .Poisson:
+            return "fish"
+        case .Viande:
+            return "meat"
+        case .Crustacé:
+            return "shrimp"
+        case .Fromage:
+            return "cheese"
+        case .Fruit:
+            return "harvest"
+        case .Légume:
+            return "vegetable"
+        case .Champignon:
+            return "mushroom"
+        case .Liquide:
+            return "wine-bottles"
         }
     }
 }
@@ -103,9 +126,30 @@ enum IngredientUnit: Int, Codable{
     case Unité = 4
     case Botte = 5
     case Pincée = 6
+    
+    var name: String {
+        switch self{
+            case .kg:
+                return "kg"
+            case .l:
+                return "l"
+            case .Pièce:
+                return "pce"
+            case .Unité:
+                return "unt"
+            case .Botte:
+                return " bt"
+            case .Pincée:
+                return " pincée"
+        }
+    }
 }
 
-class Ingredient{
+class Ingredient : Comparable{
+    static func == (lhs: Ingredient, rhs: Ingredient) -> Bool {
+        lhs.numIngredient == rhs.numIngredient
+    }
+    
     
     var numIngredient: Int
     var nameIngredient: String
@@ -114,6 +158,10 @@ class Ingredient{
     var idType: IngredientType
     var idUnit: IngredientUnit
     var stock: Double
+    
+    static func <(lhs: Ingredient, rhs: Ingredient) -> Bool {
+            lhs.nameIngredient < rhs.nameIngredient
+        }
     
     init(numIngredient: Int, nameIngredient: String, unitePrice: Double, codeAllergen: Allergen? = nil, idType: IngredientType, idUnit: IngredientUnit, stock: Double) {
         self.numIngredient = numIngredient
@@ -124,5 +172,17 @@ class Ingredient{
         self.idUnit = idUnit
         self.stock = stock
     }
+    
+    static func getSectionedDictionary(ingredients: [Ingredient]) -> Dictionary <String , [Ingredient]> {
+            let sectionDictionary: Dictionary<String, [Ingredient]> = {
+                return Dictionary(grouping: ingredients, by: {
+                    let name = $0.nameIngredient
+                    let normalizedName = name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+                    let firstChar = String(normalizedName.first!).uppercased()
+                    return firstChar
+                })
+            }()
+            return sectionDictionary
+        }
     
 }
