@@ -145,14 +145,22 @@ enum IngredientUnit: Int, Codable, CaseIterable{
     }
 }
 
+protocol IngredientObserver{
+   func changed(ingredientName: String)
+}
+
 class Ingredient : Comparable{
     static func == (lhs: Ingredient, rhs: Ingredient) -> Bool {
         lhs.numIngredient == rhs.numIngredient
     }
     
-    
+    var ingredientObs: IngredientObserver?
     var numIngredient: Int
-    var nameIngredient: String
+    var nameIngredient: String {
+        didSet{
+            self.ingredientObs?.changed(ingredientName: self.nameIngredient)
+        }
+    }
     var unitePrice: Double
     var codeAllergen: Allergen?
     var idType: IngredientType

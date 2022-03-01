@@ -12,7 +12,7 @@ import SwiftUI
 struct IngredientView: View {
     @ObservedObject var ingredients: IngredientsVM
     @ObservedObject var ingredient: IngredientVM
-    //var intent: Intent
+    var ingredientIntent : IngredientIntent
     
     var cols = [
         GridItem(.fixed(200)),
@@ -28,6 +28,9 @@ struct IngredientView: View {
     init(ingredient: Ingredient, ingredients: IngredientsVM){
         self.ingredients = ingredients
         self.ingredient = IngredientVM(model: ingredient)
+        self.ingredientIntent = IngredientIntent()
+        
+        self.ingredientIntent.addObserver(viewModel: self.ingredient, listViewModel: self.ingredients)
     }
     
     var body: some View {
@@ -39,6 +42,9 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
+                        .onSubmit{
+                            self.ingredientIntent.intentToChange(ingredientName: ingredient.nameIngredient)
+                        }
                 }
                 
                 Group{
