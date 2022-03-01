@@ -12,7 +12,6 @@ import SwiftUI
 struct IngredientView: View {
     @ObservedObject var ingredients: IngredientsVM
     @ObservedObject var ingredient: IngredientVM
-    @State private var edit = false
     //var intent: Intent
     
     var cols = [
@@ -33,51 +32,78 @@ struct IngredientView: View {
     
     var body: some View {
         VStack{
-            LazyVGrid(columns: cols, alignment: .leading) {
+            VStack(alignment: .leading) {
                 Group{
-                    Text("Nom : ")
-                    TextField("", text: $ingredient.nameIngredient).disabled(edit)
-                        .onSubmit {
-                            //self.intent.intentToChange(ingredientName: ingredient.nameIngredient)
-                        }
+                    Text("Nom").font(.headline)
+                    TextField("", text: $ingredient.nameIngredient)
+                        .padding(5)
+                        .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+                        .cornerRadius(5)
                 }
                 
                 Group{
-                    Text("Type : ")
-                    Picker("", selection: $ingredient.idType) {
-                        ForEach(IngredientType.allCases, id: \.self) { value in
-                            Text(value.name).tag(value)
+                    Text("Prix unitaire").font(.headline)
+                    HStack{
+                        TextField("", value: $ingredient.unitePrice, formatter: numberF)
+                            .padding(5)
+                            .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+                            .cornerRadius(5)
+                        Text("€")
+                    }
+                    
+                }
+                
+                HStack{
+                    VStack(alignment: .leading){
+                        Text("Stock").font(.headline)
+                        TextField("", value: $ingredient.stock, formatter: numberF)
+                            .padding(5)
+                            .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+                            .cornerRadius(5)
+                    }
+                    Spacer()
+                    VStack(alignment: .leading){
+                        Text("Unité").font(.headline)
+                        Picker("", selection: $ingredient.idUnit) {
+                            ForEach(IngredientUnit.allCases, id: \.self) { value in
+                                Text(value.name).tag(value)
+                            }
                         }
+                        .padding(5)
+                        .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+                        .cornerRadius(5)
                     }
                 }
                 
-                Group{
-                    Text("Allergène : ")
-                    Picker("", selection: $ingredient.codeAllergen) {
-                        ForEach(Allergen.allCases, id: \.self) { value in
-                            Text(value.name).tag(value)
+                HStack(spacing: 30){
+                    VStack(alignment: .leading){
+                        Text("Type").font(.headline)
+                        Picker("", selection: $ingredient.idType) {
+                            ForEach(IngredientType.allCases, id: \.self) { value in
+                                Text(value.name).tag(value)
+                            }
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding(5)
+                        .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+                        .cornerRadius(5)
+                    }
+                    
+                    VStack(alignment: .leading){
+                        Text("Allergène").font(.headline)
+                        Picker("", selection: $ingredient.codeAllergen) {
+                            ForEach(Allergen.allCases, id: \.self) { value in
+                                Text(value.name).tag(value)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(5)
+                        .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+                        .cornerRadius(5)
                     }
                 }
                 
-                Group{
-                    Text("Prix unitaire : ")
-                    TextField("", value: $ingredient.unitePrice, formatter: numberF)
-                }
                 
-                Group{
-                    Text("Stock : ")
-                    TextField("", value: $ingredient.stock, formatter: numberF)
-                }
-                
-                Group{
-                    Text("Unité : ")
-                    Picker("", selection: $ingredient.idUnit) {
-                        ForEach(IngredientUnit.allCases, id: \.self) { value in
-                            Text(value.name).tag(value)
-                        }
-                    }
-                }
             }.padding()
             Spacer()
         }
