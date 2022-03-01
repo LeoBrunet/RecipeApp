@@ -25,9 +25,8 @@ struct IngredientsView: View {
                         if let ingredients = sectionDictionary[key]{
                             Section(header: Text("\(key)")) {
                                 ForEach(Array(ingredients.enumerated()), id:\.element.numIngredient){ index, ing in
-                                    NavigationLink(destination: IngredientView(index: index, ingredients: ingredientsVM)){
+                                    NavigationLink(destination: IngredientView(ingredient: ing, ingredients: ingredientsVM)){
                                         HStack(){
-                                            
                                             if(colorScheme == .light){
                                                 Label(title: {
                                                     Text(ing.nameIngredient).font(.system(size: 16, weight: .semibold, design: .rounded))

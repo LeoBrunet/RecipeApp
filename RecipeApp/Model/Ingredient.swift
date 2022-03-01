@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Allergen: Int, Codable{
+enum Allergen: Int, Codable, CaseIterable{
     case Aucun = 0
     case Arachide = 1
     case Céleri = 2
@@ -119,7 +119,7 @@ enum IngredientType: Int, Codable, CaseIterable{
     }
 }
 
-enum IngredientUnit: Int, Codable{
+enum IngredientUnit: Int, Codable, CaseIterable{
     case kg = 1
     case l = 2
     case Pièce = 3
