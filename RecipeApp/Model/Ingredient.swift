@@ -147,6 +147,11 @@ enum IngredientUnit: Int, Codable, CaseIterable{
 
 protocol IngredientObserver{
    func changed(ingredientName: String)
+    func changed(unitePrice: Double)
+    func changed(stock : Double)
+    func changed(codeAllergen  : Allergen)
+    func changed(type: IngredientType)
+    func changed(unit: IngredientUnit)
 }
 
 class Ingredient : Comparable{
@@ -161,11 +166,31 @@ class Ingredient : Comparable{
             self.ingredientObs?.changed(ingredientName: self.nameIngredient)
         }
     }
-    var unitePrice: Double
-    var codeAllergen: Allergen?
-    var idType: IngredientType
-    var idUnit: IngredientUnit
-    var stock: Double
+    var unitePrice: Double{
+        didSet{
+            self.ingredientObs?.changed(unitePrice: self.unitePrice)
+        }
+    }
+    var codeAllergen: Allergen?{
+        didSet{
+            self.ingredientObs?.changed(codeAllergen: self.codeAllergen ?? Allergen.Aucun)
+        }
+    }
+    var idType: IngredientType{
+        didSet{
+            self.ingredientObs?.changed(type: self.idType)
+        }
+    }
+    var idUnit: IngredientUnit{
+        didSet{
+            self.ingredientObs?.changed(unit: self.idUnit)
+        }
+    }
+    var stock: Double{
+        didSet{
+            self.ingredientObs?.changed(stock: self.stock)
+        }
+    }
     
     static func <(lhs: Ingredient, rhs: Ingredient) -> Bool {
             lhs.nameIngredient < rhs.nameIngredient

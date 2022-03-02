@@ -53,15 +53,15 @@ class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
             self.model.nameIngredient = ingredientNameClean
             print("vm: model name changed to '\(self.model.nameIngredient)'")
         case .ingredientAllergenChanging(let allergen):
-            break
+            self.model.codeAllergen = allergen
         case .ingredientTypeChanging(let type):
-            break
+            self.model.idType = type
         case .ingredientStockChanging(let stock):
-            break
+            self.model.stock = stock
         case .ingredientUnitChanging(let unit):
-            break
+            self.model.idUnit = unit
         case .ingredientPriceChanging(let price):
-            break
+            self.model.unitePrice = price
         }
         return .none // on arrête de traiter cette demande et on attend un nouveau send
     }
@@ -73,4 +73,23 @@ class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
         self.nameIngredient = ingredientName
     }
     
+    func changed(unitePrice: Double) {
+        self.unitePrice = unitePrice
+    }
+    
+    func changed(stock : Double) {
+        self.stock = stock
+    }
+    
+    func changed(codeAllergen  : Allergen) {
+        self.codeAllergen = codeAllergen
+    }
+    
+    func changed(type: IngredientType) {
+        self.idType = type
+    }
+    
+    func changed(unit: IngredientUnit) {
+        self.idUnit = unit
+    }
 }

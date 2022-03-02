@@ -71,4 +71,27 @@ struct IngredientIntent{
         self.state.send(.ingredientNameChanging(ingredientName))
         self.listState.send(.listUpdated)
     }
+    
+    func intentToChange(unitePrice: Double){
+        self.state.send(.ingredientPriceChanging(unitePrice))
+    }
+    
+    func intentToChange(unit: IngredientUnit){
+        self.state.send(.ingredientUnitChanging(unit))
+        self.listState.send(.listUpdated)
+    }
+    
+    func intentToChange(allergen: Allergen){
+        self.state.send(.ingredientAllergenChanging(allergen))
+    }
+    
+    func intentToChange(stock: Double){
+        self.state.send(.ingredientStockChanging(stock))
+        self.listState.send(.listUpdated)
+    }
+    
+    func intentToChange(type: IngredientType){
+        self.state.send(.ingredientTypeChanging(type))
+        self.listState.send(.listUpdated)
+    }
 }

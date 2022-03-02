@@ -54,6 +54,9 @@ struct IngredientView: View {
                             .padding(5)
                             .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                             .cornerRadius(5)
+                            .onSubmit {
+                                self.ingredientIntent.intentToChange(unitePrice: ingredient.unitePrice)
+                            }
                         Text("€")
                     }
                     
@@ -66,6 +69,9 @@ struct IngredientView: View {
                             .padding(5)
                             .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                             .cornerRadius(5)
+                            .onSubmit{
+                                self.ingredientIntent.intentToChange(stock: ingredient.stock)
+                            }
                     }
                     Spacer()
                     VStack(alignment: .leading){
@@ -78,6 +84,9 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
+                        .onDisappear{
+                            self.ingredientIntent.intentToChange(unit: ingredient.idUnit)
+                        }
                     }
                 }
                 
@@ -93,6 +102,9 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
+                        .onDisappear{
+                            self.ingredientIntent.intentToChange(type: ingredient.idType)
+                        }
                     }
                     
                     VStack(alignment: .leading){
@@ -106,6 +118,9 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
+                        .onDisappear{
+                            self.ingredientIntent.intentToChange(allergen: ingredient.codeAllergen!)
+                        }
                     }
                 }
                 
