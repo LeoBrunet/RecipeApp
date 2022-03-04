@@ -39,8 +39,23 @@ struct IngredientDAO{
         }
     }
     
+    static func createIngredient(ingredient: Ingredient) async -> Result <Ingredient, Error>{
+        let request : Result<IngredientDTO, JSONError> = await URLSession.shared.create(urlEnd: "ingredient/", data: IngredientToDTO(ingredient: ingredient))
+        
+        switch(request){
+
+        case .success(let updated):
+            return .success(DTOToIngredient(ingDTO: updated))
+
+
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    
     static func updateIngredient(ingredient: Ingredient) async -> Result <Bool, Error>{
-        let request : Result<Bool, JSONError> = await URLSession.shared.update(urlEnd: "ingredient/" + String(ingredient.numIngredient), data: IngredientToDTO(ingredient: ingredient))
+        let request : Result<Bool, JSONError> = await URLSession.shared.update(urlEnd: "ingredient/" + String(ingredient.numIngredient!), data: IngredientToDTO(ingredient: ingredient))
         
         switch(request){
 

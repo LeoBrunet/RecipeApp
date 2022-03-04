@@ -41,6 +41,9 @@ class IngredientsVM : ObservableObject, Subscriber {
              break
        case .listUpdated:
            self.objectWillChange.send()
+       case .newElement(let ing):
+           self.ingredients.append(ing)
+           self.objectWillChange.send()
        }
        return .none // on arrête de traiter cette demande et on attend un nouveau send
     }

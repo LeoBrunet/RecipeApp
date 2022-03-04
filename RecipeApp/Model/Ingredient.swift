@@ -160,7 +160,7 @@ class Ingredient : Comparable{
     }
     
     var ingredientObs: IngredientObserver?
-    var numIngredient: Int
+    var numIngredient: Int?
     var nameIngredient: String {
         didSet{
             self.ingredientObs?.changed(ingredientName: self.nameIngredient)
@@ -196,7 +196,7 @@ class Ingredient : Comparable{
             lhs.nameIngredient < rhs.nameIngredient
         }
     
-    init(numIngredient: Int, nameIngredient: String, unitePrice: Double, codeAllergen: Allergen? = nil, idType: IngredientType, idUnit: IngredientUnit, stock: Double) {
+    init(numIngredient: Int?, nameIngredient: String, unitePrice: Double, codeAllergen: Allergen? = nil, idType: IngredientType, idUnit: IngredientUnit, stock: Double) {
         self.numIngredient = numIngredient
         self.nameIngredient = nameIngredient
         self.unitePrice = unitePrice

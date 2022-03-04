@@ -11,7 +11,7 @@ import Combine
 class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
     
     var model: Ingredient
-    @Published var numIngredient: Int
+    @Published var numIngredient: Int?
     @Published var nameIngredient: String
     @Published var unitePrice: Double
     @Published var codeAllergen: Allergen?
@@ -63,6 +63,13 @@ class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
         case .ingredientPriceChanging(let price):
             self.model.unitePrice = price
         case .ingredientUpdating:
+            self.model.nameIngredient = self.nameIngredient
+            self.model.stock = self.stock
+            self.model.idUnit = self.idUnit
+            self.model.idType = self.idType
+            self.model.codeAllergen = self.codeAllergen
+            self.model.unitePrice = self.unitePrice
+        case .ingredientAdding:
             self.model.nameIngredient = self.nameIngredient
             self.model.stock = self.stock
             self.model.idUnit = self.idUnit

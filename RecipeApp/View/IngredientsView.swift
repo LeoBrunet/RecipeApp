@@ -10,10 +10,12 @@ import SwiftUI
 struct IngredientsView: View {
     @StateObject var ingredientsVM: IngredientsVM = IngredientsVM()
     @State private var searchText = ""
-    @State private var showingSheet = false
+    @State var isCategorySheetShown: Bool = false
+    @State var isAddSheetShown: Bool = false
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var selection:Set<IngredientType> = Set(IngredientType.allCases)
 
+    
     
     var body: some View {
         NavigationView{
@@ -62,21 +64,29 @@ struct IngredientsView: View {
                 }
                 
             }
+            
             .navigationTitle("Ingrédients")
             .toolbar{
-                ToolbarItem(placement: .navigationBarLeading){
-                    Button("Catégories"){
-                        showingSheet.toggle()
+                Group{
+                    ToolbarItem(placement: .navigationBarLeading){
+                        Button("Catégories"){
+                            isCategorySheetShown = true
+                        }
+                        .sheet(isPresented: $isCategorySheetShown){
+                            CategoryView(selection: $selection)
+                        }
                     }
-                    .sheet(isPresented: $showingSheet) {
-                        CategoryView(selection: $selection)
+                    ToolbarItem(placement: .navigationBarTrailing){
+                        Button("Ajouter"){
+                            isAddSheetShown = true
+                        }
+                        .sheet(isPresented: $isAddSheetShown){
+                            AddIngredientView(ingredients: ingredientsVM)
+                        }
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing){
-                    Image(systemName: "plus").foregroundColor(Color("Green"))
-                }
+                
             }
-            
         }.tint(Color("Green"))
         
     }
@@ -112,8 +122,8 @@ struct CategoryView: View {
                     }
                 }
                 .onAppear(){
-                  UITableView.appearance().backgroundColor = UIColor.clear
-                  UITableViewCell.appearance().backgroundColor = UIColor.clear
+                    UITableView.appearance().backgroundColor = UIColor.clear
+                    UITableViewCell.appearance().backgroundColor = UIColor.clear
                     
                 }
                 Button("Tout sélectionner", action: {
