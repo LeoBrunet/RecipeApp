@@ -16,6 +16,7 @@ enum IngredientIntentState :  CustomStringConvertible, Equatable{
     case ingredientStockChanging(Double)
     case ingredientUnitChanging(IngredientUnit)
     case ingredientPriceChanging(Double)
+    case ingredientUpdating
     
     var description: String{
         switch self{
@@ -26,6 +27,7 @@ enum IngredientIntentState :  CustomStringConvertible, Equatable{
         case .ingredientStockChanging(let stock): return "state: .ingredientStockChanging(\(stock))"
         case .ingredientUnitChanging(let unit): return "state: .ingredientUnitChanging(\(unit.name))"
         case .ingredientPriceChanging(let price): return "state: .ingredientPriceChanging(\(price))"
+        case .ingredientUpdating: return "state: .ingredientUpdating"
         }
     }
 }
@@ -93,5 +95,18 @@ struct IngredientIntent{
     func intentToChange(type: IngredientType){
         self.state.send(.ingredientTypeChanging(type))
         self.listState.send(.listUpdated)
+    }
+    
+    func intentToUpdate(ingredient: Ingredient) async{
+        self.state.send(.ingredientUpdating)
+        let request : Result<Bool, Error> = await IngredientDAO.updateIngredient(ingredient: ingredient)
+        switch(request){
+        case .success(_):
+            print("ingredient updated in db")
+            self.listState.send(.listUpdated)
+        case .failure(let error):
+            print(error)
+            
+        }
     }
 }

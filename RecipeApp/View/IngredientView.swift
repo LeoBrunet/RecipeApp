@@ -12,6 +12,8 @@ import SwiftUI
 struct IngredientView: View {
     @ObservedObject var ingredients: IngredientsVM
     @ObservedObject var ingredient: IngredientVM
+    @State var editable = false;
+    @State var buttonText = "Éditer"
     var ingredientIntent : IngredientIntent
     
     var cols = [
@@ -42,9 +44,7 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
-                        .onSubmit{
-                            self.ingredientIntent.intentToChange(ingredientName: ingredient.nameIngredient)
-                        }
+                        .disabled(!editable)
                 }
                 
                 Group{
@@ -54,9 +54,7 @@ struct IngredientView: View {
                             .padding(5)
                             .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                             .cornerRadius(5)
-                            .onSubmit {
-                                self.ingredientIntent.intentToChange(unitePrice: ingredient.unitePrice)
-                            }
+                            .disabled(!editable)
                         Text("€")
                     }
                     
@@ -69,9 +67,7 @@ struct IngredientView: View {
                             .padding(5)
                             .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                             .cornerRadius(5)
-                            .onSubmit{
-                                self.ingredientIntent.intentToChange(stock: ingredient.stock)
-                            }
+                            .disabled(!editable)
                     }
                     Spacer()
                     VStack(alignment: .leading){
@@ -84,9 +80,7 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
-                        .onDisappear{
-                            self.ingredientIntent.intentToChange(unit: ingredient.idUnit)
-                        }
+                        .disabled(!editable)
                     }
                 }
                 
@@ -102,9 +96,7 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
-                        .onDisappear{
-                            self.ingredientIntent.intentToChange(type: ingredient.idType)
-                        }
+                        .disabled(!editable)
                     }
                     
                     VStack(alignment: .leading){
@@ -118,14 +110,22 @@ struct IngredientView: View {
                         .padding(5)
                         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
                         .cornerRadius(5)
-                        .onDisappear{
-                            self.ingredientIntent.intentToChange(allergen: ingredient.codeAllergen!)
-                        }
+                        .disabled(!editable)
                     }
                 }
                 
                 
             }.padding()
+            
+            if(editable){
+                Button("Valider"){
+                    Task{
+                        await self.ingredientIntent.intentToUpdate(ingredient: ingredient.model)
+                    }
+                    editable = false
+                    buttonText = "Éditer"
+                }.padding()
+            }
             Spacer()
         }
         .navigationTitle(self.ingredient.nameIngredient)
@@ -135,6 +135,19 @@ struct IngredientView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 30, height: 30, alignment: .center).colorMultiply(Color("Green"))
+            }
+            ToolbarItem(placement: .navigationBarTrailing){
+                Button(buttonText) {
+                    if(editable){
+                        editable = false
+                        buttonText = "Éditer"
+                        ingredient.cancelChanges()
+                    }
+                    else{
+                        editable = true
+                        buttonText = "Annuler"
+                    }
+                }
             }
         }
     }

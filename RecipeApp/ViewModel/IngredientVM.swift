@@ -10,7 +10,7 @@ import Combine
 
 class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
     
-    private var model: Ingredient
+    var model: Ingredient
     @Published var numIngredient: Int
     @Published var nameIngredient: String
     @Published var unitePrice: Double
@@ -62,6 +62,13 @@ class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
             self.model.idUnit = unit
         case .ingredientPriceChanging(let price):
             self.model.unitePrice = price
+        case .ingredientUpdating:
+            self.model.nameIngredient = self.nameIngredient
+            self.model.stock = self.stock
+            self.model.idUnit = self.idUnit
+            self.model.idType = self.idType
+            self.model.codeAllergen = self.codeAllergen
+            self.model.unitePrice = self.unitePrice
         }
         return .none // on arrête de traiter cette demande et on attend un nouveau send
     }
@@ -91,5 +98,14 @@ class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
     
     func changed(unit: IngredientUnit) {
         self.idUnit = unit
+    }
+    
+    func cancelChanges(){
+        self.nameIngredient = model.nameIngredient
+        self.unitePrice = model.unitePrice
+        self.codeAllergen = model.codeAllergen
+        self.idType = model.idType
+        self.idUnit = model.idUnit
+        self.stock = model.stock
     }
 }
