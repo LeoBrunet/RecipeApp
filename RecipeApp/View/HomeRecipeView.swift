@@ -17,7 +17,7 @@ struct HomeRecipeView: View {
     }
     
     var lastRecipe: LightRecipe? {
-        return self.recipesVM.recipes.max(by: {$0.numRecipe < $1.numRecipe})
+        return self.recipesVM.recipes.max(by: {$0.numRecipe! < $1.numRecipe!})
     }
     
     var body: some View {
@@ -76,7 +76,20 @@ struct HomeRecipeView: View {
                     }
                     
                 }.padding(20).navigationTitle("RecipeApp").background(.clear)
-            }.onAppear{
+            }
+            .toolbar{
+                Group{
+                    ToolbarItem(placement: .navigationBarTrailing){
+                        Button(action: {
+                         }) {
+                             NavigationLink(destination: AddRecipeView(recipes: recipesVM)) {
+                             Label("", systemImage: "plus")
+                             }
+                         }
+                    }
+                }
+            }
+            .onAppear{
                 if recipesVM.recipes.count == 0 {
                     Task {
                         await recipesVM.getAllRecipes()

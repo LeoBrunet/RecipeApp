@@ -15,24 +15,32 @@ struct RecipeView: View {
     }
     
     var body: some View {
-        NavigationView{
-            ScrollView(.vertical, showsIndicators: false) {
-                StickyHeader {
-                    StickyHeader {
-                        ImageView(url:"https://nicolas-ig.alwaysdata.net/api/file/"+recipe.image)
+        ScrollView {
+            GeometryReader { geometry in
+                ZStack {
+                    if geometry.frame(in: .global).minY <= 0 {
+                        TopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipe.image, geometry: geometry)
+                    } else {
+                        OtherTopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipe.name, geometry: geometry)
                     }
                 }
-               
-                VStack(alignment:.leading){
-                    Text(recipe.name).bold().font(.title2)
-                    Text(recipe.description)
-                }
-                
-                // Scroll View Content Here
-                // ...
             }
+            .frame(height: 400)
+            VStack(alignment: .leading) {
+                Text(recipe.name)
+                    .bold().font(.title2)
+                    .lineLimit(nil)
+                    .padding(.top, 10)
+                Text(recipe.description)
+
+                    .lineLimit(nil)
+                    .padding(.top, 30)
+            }
+            .frame(width: 350)
         }
+        .edgesIgnoringSafeArea(.top)
     }
+    
 }
 
 struct RecipeView_Previews: PreviewProvider {
