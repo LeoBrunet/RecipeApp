@@ -124,7 +124,9 @@ struct IngredientView: View {
                     }
                     editable = false
                     buttonText = "Éditer"
-                }.padding()
+                }
+                .padding()
+                .disabled(ingredient.nameIngredient.isEmpty)
             }
             Spacer()
         }
@@ -149,6 +151,9 @@ struct IngredientView: View {
                     }
                 }
             }
+        }
+        .onDisappear{
+            ingredient.cancelChanges()
         }
     }
 }

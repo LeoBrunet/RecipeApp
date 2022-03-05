@@ -105,6 +105,7 @@ struct CategoryView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State private var editMode = EditMode.active
     @Binding var selection:Set<IngredientType>
+    @State var buttonText = "Tout déselectionner"
     
     let types = IngredientType.allCases
     
@@ -117,7 +118,6 @@ struct CategoryView: View {
                             Text(type.name).font(.system(size: 16, weight: .semibold, design: .rounded))
                         }, icon: {
                             Image(type.icon).resizable().scaledToFit().frame(width: 30).colorMultiply(.black)
-                            
                         })
                     }
                 }
@@ -126,9 +126,22 @@ struct CategoryView: View {
                     UITableViewCell.appearance().backgroundColor = UIColor.clear
                     
                 }
-                Button("Tout sélectionner", action: {
-                    selection = Set(IngredientType.allCases)
-                })
+                Button(buttonText, action: {
+                    if(IngredientType.allCases.allSatisfy(selection.contains)){
+                        selection = Set()
+                        buttonText = "Tout sélectionner"
+                    }else{
+                        selection = Set(IngredientType.allCases)
+                        buttonText = "Tout désélectionner "
+                    }
+                    
+                }).onChange(of: selection){ newValue in
+                    if(IngredientType.allCases.allSatisfy(selection.contains)){
+                        buttonText = "Tout désélectionner"
+                    }else{
+                        buttonText = "Tout sélectionner "
+                    }
+                }
             }
             .environment(\.editMode, $editMode)
             .navigationTitle("Catégorie")
