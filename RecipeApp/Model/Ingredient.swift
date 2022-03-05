@@ -191,12 +191,13 @@ class Ingredient : Comparable{
             self.ingredientObs?.changed(stock: self.stock)
         }
     }
+    var quantity: Int?
     
     static func <(lhs: Ingredient, rhs: Ingredient) -> Bool {
             lhs.nameIngredient < rhs.nameIngredient
         }
     
-    init(numIngredient: Int?, nameIngredient: String, unitePrice: Double, codeAllergen: Allergen? = nil, idType: IngredientType, idUnit: IngredientUnit, stock: Double) {
+    init(numIngredient: Int?, nameIngredient: String, unitePrice: Double, codeAllergen: Allergen? = nil, idType: IngredientType, idUnit: IngredientUnit, stock: Double, quantity: Int? = 0) {
         self.numIngredient = numIngredient
         self.nameIngredient = nameIngredient
         self.unitePrice = unitePrice
@@ -204,6 +205,7 @@ class Ingredient : Comparable{
         self.idType = idType
         self.idUnit = idUnit
         self.stock = stock
+        self.quantity = quantity
     }
     
     static func getSectionedDictionary(ingredients: [Ingredient]) -> Dictionary <String , [Ingredient]> {
