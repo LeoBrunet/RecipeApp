@@ -8,12 +8,12 @@
 import Foundation
 
 struct LightRecipeDTO: Codable {
-    var numRecipe: Int
+    var numRecipe: Int?
     var name: String
     var nbDiners: Int
     var image: String
     var idCategory: RecipeCategory
     var description: String
-    var ingredientCost: Double
-    var duration: Int
+    var ingredientCost: Double?
+    var duration: Int?
 }
