@@ -12,11 +12,11 @@ class LightRecipeVM: ObservableObject, Subscriber {
     
     var model : LightRecipe
     var numRecipe: Int?
-    var name: String
-    var nbDiners: Int
-    var image: String
-    var category: RecipeCategory
-    var description: String
+    @Published var name: String
+    @Published var nbDiners: Int
+    @Published var image: String
+    @Published var category: RecipeCategory
+    @Published var description: String
     var ingredientCost: Double?
     var duration: Int?
     
@@ -32,7 +32,7 @@ class LightRecipeVM: ObservableObject, Subscriber {
         self.duration = model.duration
     }
     
-    typealias Input = IngredientIntentState
+    typealias Input = RecipeIntentState
     typealias Failure = Never
     
     // appelée à l'inscription
@@ -45,9 +45,22 @@ class LightRecipeVM: ObservableObject, Subscriber {
     }
     
     // Activée à chaque send() du publisher :
-    func receive(_ input: IngredientIntentState) -> Subscribers.Demand {
+    func receive(_ input: RecipeIntentState) -> Subscribers.Demand {
         print("vm -> intent \(input)")
-       
+        switch input{
+        case .ready:
+            break
+        case .recipeAdding:
+            self.numRecipe = self.model.numRecipe
+            self.name = self.model.name
+            self.nbDiners = self.model.nbDiners
+            self.image = self.model.image
+            self.category = self.model.category
+            self.description = self.model.description
+            self.ingredientCost = self.model.ingredientCost
+            self.duration = self.model.duration
+        }
+
         return .none // on arrête de traiter cette demande et on attend un nouveau send
     }
 }
