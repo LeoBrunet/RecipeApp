@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct RecipeView: View {
-    var recipe: LightRecipe
+    var recipeVM: RecipeVM
     
     init(recipe: LightRecipe) {
-        self.recipe = recipe
+        self.recipeVM = RecipeVM(model: recipe, steps: [])
     }
     
     var body: some View {
@@ -19,26 +19,38 @@ struct RecipeView: View {
             GeometryReader { geometry in
                 ZStack {
                     if geometry.frame(in: .global).minY <= 0 {
-                        TopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipe.image, geometry: geometry)
+                        TopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipeVM.model.image, geometry: geometry)
                     } else {
-                        OtherTopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipe.name, geometry: geometry)
+                        OtherTopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipeVM.model.name, geometry: geometry)
                     }
                 }
             }
             .frame(height: 400)
             VStack(alignment: .leading) {
-                Text(recipe.name)
+                Text(recipeVM.model.name)
                     .bold().font(.title2)
                     .lineLimit(nil)
                     .padding(.top, 10)
-                Text(recipe.description)
+                Text(recipeVM.model.description)
 
                     .lineLimit(nil)
                     .padding(.top, 30)
+                List {
+                    ForEach(Array(recipeVM.steps.enumerated()), id:\.element.numStep){ index, step in
+                        Text(step.name)
+                    }
+                }
             }
             .frame(width: 350)
         }
         .edgesIgnoringSafeArea(.top)
+        .onAppear{
+            if recipeVM.steps.count == 0 {
+                Task {
+                    await recipeVM.getSteps(numRecipe: recipeVM.model.numRecipe!)
+                }
+            }
+        }
     }
     
 }
