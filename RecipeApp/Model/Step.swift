@@ -14,11 +14,11 @@ class Step {
     var ingredients: [Ingredient]
     var duration: Int
     
-    init(numStep: Int, name: String, description: String, ingredients: [Ingredient], duration: Int) {
+    init(numStep: Int, name: String, description: String, ingredients: [Ingredient], duration: Int?) {
         self.name = name
         self.description = description
         self.ingredients = ingredients
-        self.duration = duration
+        self.duration = duration ?? 0
         self.numStep = numStep
     }
 }

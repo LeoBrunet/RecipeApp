@@ -14,6 +14,6 @@ struct LightRecipeDTO: Codable {
     var image: String
     var idCategory: RecipeCategory
     var description: String
-    var ingredientCost: Double
-    var duration: Int
+    var ingredientCost: Double?
+    var duration: Int?
 }

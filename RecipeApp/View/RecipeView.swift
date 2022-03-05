@@ -32,27 +32,33 @@ struct RecipeView: View {
                     .lineLimit(nil)
                     .padding(.top, 10)
                 Text(recipeVM.model.description)
-
+                
                     .lineLimit(nil)
                     .padding(.top, 30)
-                List {
-                    ForEach(Array(recipeVM.steps.enumerated()), id:\.element.numStep){ index, step in
-                        Text(step.name)
-                    }
+                List{
+                    //                    ForEach(Array(recipeVM.steps.enumerated()), id:\.element.numStep){ index, step in
+                    //                        Text(step.name)
+                    //                    }
+                    Text(String(recipeVM.steps.count))
+                    Text(String(recipeVM.steps.count))
+                    Text(String(recipeVM.steps.count))
+                    Text(String(recipeVM.steps.count))
                 }
+                Text(String(recipeVM.steps.count))
             }
             .frame(width: 350)
         }
         .edgesIgnoringSafeArea(.top)
-        .onAppear{
+        .onAppear {
             if recipeVM.steps.count == 0 {
                 Task {
                     await recipeVM.getSteps(numRecipe: recipeVM.model.numRecipe!)
+                    print(recipeVM.steps)
+                    print(recipeVM.steps.count)
                 }
             }
         }
     }
-    
 }
 
 struct RecipeView_Previews: PreviewProvider {

@@ -10,7 +10,7 @@ import Foundation
 struct StepDAO{
     
     static func DTOToStep(stepDTO: StepDTO) -> Step{
-        if let recipeStep = stepDTO.recipeStep {
+        if let recipeStep = stepDTO.RecipeStep {
             return Step(numStep: stepDTO.numStep, name: recipeStep.name, description: recipeStep.description, ingredients: [], duration: recipeStep.duration)
         } else {
             let descriptionStep = stepDTO.descriptionStep!
