@@ -2,7 +2,7 @@
 //  SaleDTO.swift
 //  RecipeApp
 //
-//  Created by etud on 23/02/2022.
+//  Created by Leo Brunet on 23/02/2022.
 //
 
 import Foundation

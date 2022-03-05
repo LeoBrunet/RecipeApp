@@ -77,15 +77,16 @@ struct IngredientsView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing){
-                        Button("Ajouter"){
+                        Button{
                             isAddSheetShown = true
+                        } label : {
+                            Label("", systemImage: "plus")
                         }
                         .sheet(isPresented: $isAddSheetShown){
                             AddIngredientView(ingredients: ingredientsVM)
                         }
                     }
                 }
-                
             }
         }.tint(Color("Green"))
         
