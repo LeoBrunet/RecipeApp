@@ -8,7 +8,7 @@
 import Foundation
 
 struct IngredientDTO: Codable{
-    var numIngredient: Int
+    var numIngredient: Int?
     var nameIngredient: String
     var unitePrice: Double
     var codeAllergen: Allergen?

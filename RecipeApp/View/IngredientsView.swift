@@ -10,10 +10,12 @@ import SwiftUI
 struct IngredientsView: View {
     @StateObject var ingredientsVM: IngredientsVM = IngredientsVM()
     @State private var searchText = ""
-    @State private var showingSheet = false
+    @State var isCategorySheetShown: Bool = false
+    @State var isAddSheetShown: Bool = false
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var selection:Set<IngredientType> = Set(IngredientType.allCases)
 
+    
     
     var body: some View {
         NavigationView{
@@ -62,21 +64,29 @@ struct IngredientsView: View {
                 }
                 
             }
+            
             .navigationTitle("Ingrédients")
             .toolbar{
-                ToolbarItem(placement: .navigationBarLeading){
-                    Button("Catégories"){
-                        showingSheet.toggle()
+                Group{
+                    ToolbarItem(placement: .navigationBarLeading){
+                        Button("Catégories"){
+                            isCategorySheetShown = true
+                        }
+                        .sheet(isPresented: $isCategorySheetShown){
+                            CategoryView(selection: $selection)
+                        }
                     }
-                    .sheet(isPresented: $showingSheet) {
-                        CategoryView(selection: $selection)
+                    ToolbarItem(placement: .navigationBarTrailing){
+                        Button("Ajouter"){
+                            isAddSheetShown = true
+                        }
+                        .sheet(isPresented: $isAddSheetShown){
+                            AddIngredientView(ingredients: ingredientsVM)
+                        }
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing){
-                    Image(systemName: "plus").foregroundColor(Color("Green"))
-                }
+                
             }
-            
         }.tint(Color("Green"))
         
     }
@@ -95,6 +105,7 @@ struct CategoryView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State private var editMode = EditMode.active
     @Binding var selection:Set<IngredientType>
+    @State var buttonText = "Tout déselectionner"
     
     let types = IngredientType.allCases
     
@@ -107,18 +118,30 @@ struct CategoryView: View {
                             Text(type.name).font(.system(size: 16, weight: .semibold, design: .rounded))
                         }, icon: {
                             Image(type.icon).resizable().scaledToFit().frame(width: 30).colorMultiply(.black)
-                            
                         })
                     }
                 }
                 .onAppear(){
-                  UITableView.appearance().backgroundColor = UIColor.clear
-                  UITableViewCell.appearance().backgroundColor = UIColor.clear
+                    UITableView.appearance().backgroundColor = UIColor.clear
+                    UITableViewCell.appearance().backgroundColor = UIColor.clear
                     
                 }
-                Button("Tout sélectionner", action: {
-                    selection = Set(IngredientType.allCases)
-                })
+                Button(buttonText, action: {
+                    if(IngredientType.allCases.allSatisfy(selection.contains)){
+                        selection = Set()
+                        buttonText = "Tout sélectionner"
+                    }else{
+                        selection = Set(IngredientType.allCases)
+                        buttonText = "Tout désélectionner "
+                    }
+                    
+                }).onChange(of: selection){ newValue in
+                    if(IngredientType.allCases.allSatisfy(selection.contains)){
+                        buttonText = "Tout désélectionner"
+                    }else{
+                        buttonText = "Tout sélectionner "
+                    }
+                }
             }
             .environment(\.editMode, $editMode)
             .navigationTitle("Catégorie")

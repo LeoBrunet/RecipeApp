@@ -16,6 +16,8 @@ enum IngredientIntentState :  CustomStringConvertible, Equatable{
     case ingredientStockChanging(Double)
     case ingredientUnitChanging(IngredientUnit)
     case ingredientPriceChanging(Double)
+    case ingredientUpdating
+    case ingredientAdding
     
     var description: String{
         switch self{
@@ -26,6 +28,8 @@ enum IngredientIntentState :  CustomStringConvertible, Equatable{
         case .ingredientStockChanging(let stock): return "state: .ingredientStockChanging(\(stock))"
         case .ingredientUnitChanging(let unit): return "state: .ingredientUnitChanging(\(unit.name))"
         case .ingredientPriceChanging(let price): return "state: .ingredientPriceChanging(\(price))"
+        case .ingredientUpdating: return "state: .ingredientUpdating"
+        case .ingredientAdding: return "state: .ingredientAdding"
         }
     }
 }
@@ -33,6 +37,7 @@ enum IngredientIntentState :  CustomStringConvertible, Equatable{
 enum IngredientListIntentState : CustomStringConvertible, Equatable{
     case ready
     case listUpdated
+    case newElement(Ingredient)
     
     var description: String{
         switch self {
@@ -40,6 +45,8 @@ enum IngredientListIntentState : CustomStringConvertible, Equatable{
             return "list state: .ready"
         case .listUpdated:
             return "list state: .listUpdated"
+        case .newElement(let ing):
+            return "list state: .newElement(\(ing)"
         }
     }
 }
@@ -93,5 +100,31 @@ struct IngredientIntent{
     func intentToChange(type: IngredientType){
         self.state.send(.ingredientTypeChanging(type))
         self.listState.send(.listUpdated)
+    }
+    
+    func intentToUpdate(ingredient: Ingredient) async{
+        self.state.send(.ingredientUpdating)
+        let request : Result<Bool, Error> = await IngredientDAO.updateIngredient(ingredient: ingredient)
+        switch(request){
+        case .success(_):
+            print("ingredient updated in db")
+            self.listState.send(.listUpdated)
+        case .failure(let error):
+            print(error)
+            
+        }
+    }
+    
+    func intentToAdd(ingredient: Ingredient) async{
+        self.state.send(.ingredientAdding)
+        let request : Result<Ingredient, Error> = await IngredientDAO.createIngredient(ingredient: ingredient)
+        switch(request){
+        case .success(let ing):
+            print("ingredient updated in db")
+            self.listState.send(.newElement(ing))
+        case .failure(let error):
+            print(error)
+            
+        }
     }
 }
