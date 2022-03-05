@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddRecipeView: View {
     @ObservedObject var recipes: LightRecipesVM
-    @ObservedObject var recipe: LightRecipeVM
+    @ObservedObject var recipe: RecipeVM
     //var recipeIntent : IngredientIntent
     
     var numberF: NumberFormatter = {
@@ -20,7 +20,7 @@ struct AddRecipeView: View {
     
     init(recipes: LightRecipesVM){
         self.recipes = recipes
-        self.recipe = LightRecipeVM(model: LightRecipe(numRecipe: nil, name: "", nbDiners: 1, image: "", category: RecipeCategory.Entree, description: "", ingredientCost: nil, duration: nil))
+        self.recipe = RecipeVM(model: LightRecipe(numRecipe: nil, name: "", nbDiners: 1, image: "", category: RecipeCategory.Entree, description: "", ingredientCost: nil, duration: nil), steps: [])
         //self.ingredientIntent = IngredientIntent()
         
         //self.ingredientIntent.addObserver(viewModel: self.ingredient, listViewModel: self.ingredients)

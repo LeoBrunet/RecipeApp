@@ -8,17 +8,17 @@
 import Foundation
 
 class Step {
+    var numStep: Int
     var name: String
     var description: String
     var ingredients: [Ingredient]
-    var quantities: [Double]
     var duration: Int
     
-    init(name: String, description: String, ingredients: [Ingredient], quantities: [Double], duration: Int) {
+    init(numStep: Int, name: String, description: String, ingredients: [Ingredient], duration: Int) {
         self.name = name
         self.description = description
         self.ingredients = ingredients
-        self.quantities = quantities
         self.duration = duration
+        self.numStep = numStep
     }
 }

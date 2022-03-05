@@ -56,8 +56,11 @@ struct JSONHelper{
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .formatted(dateFormatter)
         
+        print(url)
+        
         guard let (data, _) =
                 try? await URLSession.shared.data(from: URL(string: urlBase + url)!) else{
+                    print(urlBase + url)
                     return .failure(.httpFailed)
                 }
         do{
