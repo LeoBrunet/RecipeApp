@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeRecipeView: View {
     
-    @StateObject var recipesVM: LightRecipeVM = LightRecipeVM()
+    @StateObject var recipesVM: LightRecipesVM = LightRecipesVM()
     let gradient = Gradient(colors: [.black, .clear])
     
     var firstRecipes: [LightRecipe] {
@@ -49,13 +49,14 @@ struct HomeRecipeView: View {
                         Text("Catégories").font(.title2)
                         HStack{
                             ForEach(RecipeCategory.allCases) { category in
-                                Text(category.name)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .padding(10)
-                                    .background(Color("Green"))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(5)
-                                
+                                NavigationLink(destination: RecipesView(category: category)){
+                                    Text(category.name)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        .padding(10)
+                                        .background(Color("Green"))
+                                        .foregroundColor(.white)
+                                        .cornerRadius(5)
+                                }
                             }
                         }
                     }

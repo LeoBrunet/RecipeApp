@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class LightRecipeVM : ObservableObject {
+class LightRecipesVM : ObservableObject {
     
     @Published var recipes : [LightRecipe] = []
     

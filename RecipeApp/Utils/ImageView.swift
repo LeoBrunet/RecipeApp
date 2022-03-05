@@ -40,3 +40,40 @@ struct ImageView : View {
     
     
 }
+
+struct CardImageView : View {
+    var url: String
+    
+    init(url: String){
+        self.url = url
+    }
+    
+    var body : some View {
+        AsyncImage(url: URL(string: url), transaction: Transaction(animation: .spring())) { phase in
+            switch phase {
+            case .empty:
+                Color.purple.opacity(0.1)
+         
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .cornerRadius(20)
+                    .frame(width: 100)
+                    .padding(.all, 20)
+                    
+         
+            case .failure(_):
+                Image(systemName: "exclamationmark.icloud")
+                    .resizable()
+                    .scaledToFit()
+         
+            @unknown default:
+                Image(systemName: "exclamationmark.icloud")
+            }
+        }
+        
+    }
+    
+    
+}
