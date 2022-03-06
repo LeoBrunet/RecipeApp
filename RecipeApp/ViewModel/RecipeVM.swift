@@ -11,7 +11,7 @@ import Combine
 class RecipeVM: ObservableObject, Subscriber {
     
     var model : LightRecipe
-    var steps : [Step]
+    @Published var steps : [Step]
     var numRecipe: Int?
     @Published var name: String
     @Published var nbDiners: Int
