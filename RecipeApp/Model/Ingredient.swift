@@ -138,11 +138,15 @@ enum IngredientUnit: Int, Codable, CaseIterable{
             case .Unité:
                 return "unt"
             case .Botte:
-                return " bt"
+                return "bt"
             case .Pincée:
-                return " pincée"
+                return "pincée"
         }
     }
+    
+    /*init(rawValue: idUnit){
+        
+    }*/
 }
 
 protocol IngredientObserver{

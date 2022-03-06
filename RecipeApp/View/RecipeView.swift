@@ -98,13 +98,22 @@ struct RecipeStepsView : View {
     
     var body : some View {
         ForEach(Array(recipeVM.steps.enumerated()), id:\.element.numStep){ index, step in
-            VStack(alignment: .leading){
-                Text(step.name + " (" + String(step.duration) + " min)")
-                    .bold()
-                Text(step.description)
-                Divider()
-                
+            HStack(alignment: .top){
+                VStack(alignment: .leading){
+                    Text(step.name + " (" + String(step.duration) + " min)")
+                        .bold()
+                    Text(step.description)
+                    
+                }
+                Spacer()
+                VStack(alignment: .leading){
+                    ForEach(Array(step.ingredients.enumerated()), id:\.element.numIngredient){ index, ingredient in
+                        Text(String(ingredient.quantity!) + ingredient.idUnit.name + " " + ingredient.nameIngredient)
+                        
+                    }
+                }
             }
+            Divider()
         }
         .padding(.top, 5)
     }
