@@ -59,7 +59,7 @@ struct RecipeIntent{
     // Accès à la valeur de l'état si nécessaire : state.value
     
     //    func addObserver(viewModel: ViewModel) {
-    func addObserver(viewModel: LightRecipeVM, listViewModel: LightRecipesVM){
+    func addObserver(viewModel: RecipeVM, listViewModel: LightRecipesVM){
         // reçoit VM qui veut être au courant des actions demandées (Intent)
         // ce VM souscrit aux publications (modifications) de l'état
         self.state.subscribe(viewModel)
@@ -68,14 +68,14 @@ struct RecipeIntent{
     
     func intentToAdd(recipe: LightRecipe) async{
         self.state.send(.recipeAdding)
-//        let request : Result<Recipe, Error> = await RecipeDAO.createRecipe(recipe: recipe)
-//        switch(request){
-//        case .success(let ing):
-//            print("recipe updated in db")
-//            self.listState.send(.newElement(ing))
-//        case .failure(let error):
-//            print(error)
-//            
-//        }
+        let request : Result<LightRecipe, Error> = await LightRecipeDAO.createRecipe(recipe: recipe)
+        switch(request){
+        case .success(let rec):
+            print("recipe updated in db")
+            self.listState.send(.newElement(rec))
+        case .failure(let error):
+            print(error)
+
+        }
     }
 }

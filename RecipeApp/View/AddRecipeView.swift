@@ -10,11 +10,12 @@ import PhotosUI
 
 struct AddRecipeView: View {
     @ObservedObject var recipes: LightRecipesVM
-    @ObservedObject var recipe: LightRecipeVM
+    @ObservedObject var recipe: RecipeVM
     @State private var showingImagePicker = false
     @State private var image : Image?
     @State private var inputImage : UIImage?
-    //var recipeIntent : IngredientIntent
+    @State private var imageName : String?
+    var recipeIntent : RecipeIntent
     
     var numberF: NumberFormatter = {
         let formatteur = NumberFormatter()
@@ -25,14 +26,16 @@ struct AddRecipeView: View {
     init(recipes: LightRecipesVM){
         self.recipes = recipes
         self.recipe = RecipeVM(model: LightRecipe(numRecipe: nil, name: "", nbDiners: 1, image: "", category: RecipeCategory.Entree, description: "", ingredientCost: nil, duration: nil), steps: [])
-        //self.ingredientIntent = IngredientIntent()
+        self.recipeIntent = RecipeIntent()
         
-        //self.ingredientIntent.addObserver(viewModel: self.ingredient, listViewModel: self.ingredients)
+        self.recipeIntent.addObserver(viewModel: recipe, listViewModel: recipes)
     }
     
     func loadImage() {
         guard let inputImage = inputImage else { return }
         image = Image(uiImage: inputImage)
+        recipe.image = (imageName ?? "") + ".jpg"
+        print("IMAGE : " + recipe.image)
     }
     
     var body: some View {
@@ -114,10 +117,10 @@ struct AddRecipeView: View {
                 
             }.padding()
             Button("Ajouter"){
-                //                Task{
-                //                    await self.ingredientIntent.intentToAdd(ingredient: ingredient.model)
-                //                    dismiss()
-                //                }
+                Task{
+                    URLSession.uploadImage(paramName: "file", fileName: recipe.image, image: inputImage!)
+                    await self.recipeIntent.intentToAdd(recipe: recipe.model)
+                }
             }
             .padding()
             .disabled(recipe.name.isEmpty)
@@ -126,13 +129,14 @@ struct AddRecipeView: View {
         .navigationTitle("Ajouter une recette")
         .onChange(of: inputImage){_ in loadImage()}
         .sheet(isPresented: $showingImagePicker){
-            ImagePicker(image : $inputImage)
+            ImagePicker(image : $inputImage, imageName: $imageName)
         }
     }
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var image: UIImage?
+    @Binding var imageName: String?
     
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
@@ -159,9 +163,8 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
-            
             guard let provider = results.first?.itemProvider else { return }
-            
+            self.parent.imageName = provider.suggestedName
             if provider.canLoadObject(ofClass: UIImage.self) {
                 provider.loadObject(ofClass: UIImage.self) { image, _ in
                     self.parent.image = image as? UIImage

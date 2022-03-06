@@ -66,14 +66,14 @@ class RecipeVM: ObservableObject, Subscriber {
         case .ready:
             break
         case .recipeAdding:
-            self.numRecipe = self.model.numRecipe
-            self.name = self.model.name
-            self.nbDiners = self.model.nbDiners
-            self.image = self.model.image
-            self.category = self.model.category
-            self.description = self.model.description
-            self.ingredientCost = self.model.ingredientCost
-            self.duration = self.model.duration
+            self.model.numRecipe = self.numRecipe
+            self.model.name = self.name
+            self.model.nbDiners = self.nbDiners
+            self.model.image = self.image
+            self.model.category = self.category
+            self.model.description = self.description
+            self.model.ingredientCost = self.ingredientCost
+            self.model.duration = self.duration
         }
 
         return .none // on arrête de traiter cette demande et on attend un nouveau send
