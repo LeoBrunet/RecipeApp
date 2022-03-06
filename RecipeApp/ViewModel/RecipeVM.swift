@@ -13,11 +13,11 @@ class RecipeVM: ObservableObject, Subscriber {
     var model : LightRecipe
     @Published var steps : [Step]
     var numRecipe: Int?
-    var name: String
-    var nbDiners: Int
-    var image: String
-    var category: RecipeCategory
-    var description: String
+    @Published var name: String
+    @Published var nbDiners: Int
+    @Published var image: String
+    @Published var category: RecipeCategory
+    @Published var description: String
     var ingredientCost: Double?
     var duration: Int?
     
@@ -34,7 +34,7 @@ class RecipeVM: ObservableObject, Subscriber {
         self.steps = steps
     }
     
-    typealias Input = IngredientIntentState
+    typealias Input = RecipeIntentState
     typealias Failure = Never
     
     func getSteps(numRecipe: Int) async {
@@ -60,9 +60,22 @@ class RecipeVM: ObservableObject, Subscriber {
     }
     
     // Activée à chaque send() du publisher :
-    func receive(_ input: IngredientIntentState) -> Subscribers.Demand {
+    func receive(_ input: RecipeIntentState) -> Subscribers.Demand {
         print("vm -> intent \(input)")
-       
+        switch input{
+        case .ready:
+            break
+        case .recipeAdding:
+            self.model.numRecipe = self.numRecipe
+            self.model.name = self.name
+            self.model.nbDiners = self.nbDiners
+            self.model.image = self.image
+            self.model.category = self.category
+            self.model.description = self.description
+            self.model.ingredientCost = self.ingredientCost
+            self.model.duration = self.duration
+        }
+
         return .none // on arrête de traiter cette demande et on attend un nouveau send
     }
 }
