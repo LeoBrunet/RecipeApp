@@ -11,7 +11,7 @@ struct StepDAO{
     
     static func DTOToStep(stepDTO: StepDTO) -> Step{
         if let recipeStep = stepDTO.RecipeStep {
-            return Step(numStep: stepDTO.numStep, name: recipeStep.name, description: recipeStep.description, ingredients: [], duration: recipeStep.duration, isRecipe: true)
+            return Step(numStep: recipeStep.numRecipe, name: recipeStep.name, description: recipeStep.description, ingredients: [], duration: recipeStep.duration, isRecipe: true)
         } else {
             let descriptionStep = stepDTO.descriptionStep!
             return Step(numStep: stepDTO.numStep, name: descriptionStep.nameStep, description: descriptionStep.description, ingredients: IngredientDAO.DTOListToIngredients(ingredientsDTO: descriptionStep.ingredients), duration: descriptionStep.duration, isRecipe: false)

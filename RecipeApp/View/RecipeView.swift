@@ -71,6 +71,8 @@ struct RecipeView: View {
 struct RecipeStepsView : View {
     
     @ObservedObject var recipeVM: RecipeVM
+    @State var isActive = false
+    @State var recipe: LightRecipe? = nil
     
     init(recipeVM: RecipeVM){
         self.recipeVM = recipeVM
@@ -78,11 +80,7 @@ struct RecipeStepsView : View {
     
     var body : some View {
         ForEach(Array(recipeVM.steps.enumerated()), id:\.element.numStep){ index, step in
-            VStack(alignment: .leading){
-                isRecipeStep(step: step)
-                hasIngredients(nbIngredients: step.ingredients.count, step: step)
-                Text(step.description)
-            }
+            isRecipeStep(step: step)
             Divider()
         }
         .padding(.top, 5)
@@ -96,15 +94,32 @@ struct RecipeStepsView : View {
             EmptyView()
         }
     }
-
+    
     
     @ViewBuilder
     private func isRecipeStep(step: Step) -> some View {
         if(step.duration > 0){
-            Text(step.name + " (" + String(step.duration) + " min)")
-                .bold()
+            VStack(alignment: .leading){
+                Text(step.name + " (" + String(step.duration) + " min)")
+                    .bold()
+                hasIngredients(nbIngredients: step.ingredients.count, step: step)
+                Text(step.description)
+            }
         } else {
-            Text(step.name).bold()
+            VStack(alignment: .leading){
+                Text(step.name)
+                    .bold()
+                hasIngredients(nbIngredients: step.ingredients.count, step: step)
+                Text(step.description)
+            }.onTapGesture(){
+                isActive = true
+                Task {
+                    self.recipe = await self.recipeVM.getRecipe(numRecipe: step.numStep!)
+                }
+            }
+            if let recipe = recipe {
+                NavigationLink(isActive: $isActive, destination: { RecipeView(recipe: recipe) }, label: { EmptyView() })
+            }
         }
     }
 }

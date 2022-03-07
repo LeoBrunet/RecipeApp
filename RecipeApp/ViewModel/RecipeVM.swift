@@ -102,6 +102,21 @@ class RecipeVM: ObservableObject, Subscriber {
         }
     }
     
+    func getRecipe(numRecipe: Int) async -> LightRecipe? {
+        let request : Result<LightRecipe, Error> = await LightRecipeDAO.getRecipe(numRecipe: numRecipe)
+        
+        switch(request){
+            
+        case .success(let recipe):
+            return recipe
+            
+        case .failure(let error):
+            print(error)
+            return nil
+        }
+        
+    }
+    
     func sell(sale: Sale) async -> Bool {
         
         let request : Result<Sale, Error> = await SaleDAO.sell(sale: sale)

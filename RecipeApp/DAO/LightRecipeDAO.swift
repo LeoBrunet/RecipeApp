@@ -41,6 +41,22 @@ struct LightRecipeDAO{
         }
     }
     
+    static func getRecipe(numRecipe: Int) async -> Result<LightRecipe,Error>{
+        let request : Result<LightRecipeDTO, JSONError> = await JSONHelper.get(url: "recipe/"+String(numRecipe))
+        
+        switch(request){
+
+        case .success(let recipeDTO):
+            print(recipeDTO)
+            return .success(LightRecipeDAO.DTOToRecipe(recipeDTO: recipeDTO))
+
+
+        case .failure(let error):
+            print(error)
+            return .failure(error)
+        }
+    }
+    
     static func createRecipe(recipe: LightRecipe) async -> Result <LightRecipe, Error>{
         let request : Result<LightRecipeDTO, JSONError> = await URLSession.shared.create(urlEnd: "recipe/", data: RecipeToDTO(recipe: recipe))
         
