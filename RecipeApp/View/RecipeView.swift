@@ -18,16 +18,6 @@ struct RecipeView: View {
     
     var body: some View {
         ScrollView {
-            /*GeometryReader { geometry in
-             ZStack {
-             if geometry.frame(in: .global).minY <= 0 {
-             TopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipeVM.model.image, geometry: geometry)
-             } else {
-             OtherTopImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipeVM.model.name, geometry: geometry)
-             }
-             }
-             }
-             .frame(height: 400)*/
             StickyHeader{
                 ImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipeVM.model.image)
             }.frame(height: 400)
@@ -48,20 +38,6 @@ struct RecipeView: View {
                         }
                     }.pickerStyle(SegmentedPickerStyle())
                 }
-                //Text(viewArray[selectedIndex])
-                
-                
-                
-                //                ForEach(Array(recipeVM.steps.enumerated()), id:\.element.numStep){ index, step in
-                //                    VStack(alignment: .leading){
-                //                        Text(step.name + " (" + String(step.duration) + " min)")
-                //                            .bold()
-                //                        Text(step.description)
-                //                        Divider()
-                //
-                //                    }
-                //                }
-                //                .padding(.top, 5)
                 getViewSelected(selectedIndex: selectedIndex)
                 
             }.padding(10).cornerRadius(10)
@@ -103,8 +79,7 @@ struct RecipeStepsView : View {
     var body : some View {
         ForEach(Array(recipeVM.steps.enumerated()), id:\.element.numStep){ index, step in
             VStack(alignment: .leading){
-                Text(step.name + " (" + String(step.duration) + " min)")
-                    .bold()
+                isRecipeStep(step: step)
                 hasIngredients(nbIngredients: step.ingredients.count, step: step)
                 Text(step.description)
             }
@@ -119,6 +94,17 @@ struct RecipeStepsView : View {
             HasIngredients(step: step)
         } else {
             EmptyView()
+        }
+    }
+
+    
+    @ViewBuilder
+    private func isRecipeStep(step: Step) -> some View {
+        if(step.duration > 0){
+            Text(step.name + " (" + String(step.duration) + " min)")
+                .bold()
+        } else {
+            Text(step.name).bold()
         }
     }
 }
@@ -209,6 +195,8 @@ struct RecipeCostsView : View {
 struct RecipeSellView : View {
     
     @State var qte: Int = 1
+    @State private var showingAlert = false
+    
     var recipeVM: RecipeVM
     
     init(recipeVM: RecipeVM){
@@ -221,11 +209,11 @@ struct RecipeSellView : View {
             Stepper("Quantité", value: $qte, in: 1...99)
                 .labelsHidden()
             Spacer()
-            NavigationLink(destination:SalesView()){
             Button {
-                print("vend wsh" + String(qte))
+                print("vend " + String(qte))
                 Task{
-                    await recipeVM.sell(sale: Sale(numSale: 0, quantity: qte, date: Date.now, numRecipe: recipeVM.model.numRecipe!, nameRecipe: recipeVM.model.name, cost: recipeVM.totalCost, price: recipeVM.price))
+                    let _ = await recipeVM.sell(sale: Sale(numSale: 0, quantity: qte, date: Date.now, numRecipe: recipeVM.model.numRecipe!, nameRecipe: recipeVM.model.name, cost: recipeVM.totalCost, price: recipeVM.price))
+                    showingAlert = true
                 }
             } label: {
                 VStack(alignment:.leading){
@@ -235,9 +223,14 @@ struct RecipeSellView : View {
                         .foregroundColor(.white)
                         .background(Color("Green"))
                     
+                }.alert(isPresented: $showingAlert) {
+                    Alert(title: Text("Opération validée"),
+                          message: Text("Vérifiez dans l'onglet vente, la vente suivante : " + String(qte) + " " + recipeVM.name + "."),
+                          dismissButton: .default(Text("D'accord"))
+                    )
                 }
             }
-            }
+            
             
         }.padding(5)
     }

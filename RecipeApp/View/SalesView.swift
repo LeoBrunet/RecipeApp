@@ -9,7 +9,11 @@ import SwiftUI
 struct SalesView: View {
     @StateObject var salesVM: SalesVM = SalesVM()
     @State private var searchText: String = ""
+    let dateFormatter = DateFormatter()
     
+    init(){
+        self.dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
+    }
     
     var body: some View {
         NavigationView{
@@ -19,7 +23,7 @@ struct SalesView: View {
                         HStack{
                             VStack(alignment: .leading){
                                 Text(sale.nameRecipe).bold()
-                                Text(sale.date, style:.date)
+                                Text(dateFormatter.string(from: sale.date))
                             }
                             Spacer()
                             VStack{
@@ -41,6 +45,10 @@ struct SalesView: View {
                             Task {
                                 await salesVM.getAllSales()
                             }
+                        }
+                    }.refreshable {
+                        Task {
+                            await salesVM.getAllSales()
                         }
                     }
             }.navigationTitle("Ventes")
