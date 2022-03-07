@@ -12,7 +12,7 @@ class RecipeVM: ObservableObject, Subscriber {
     
     var model : LightRecipe
     @Published var steps : [Step]
-    var numRecipe: Int?
+    @Published var numRecipe: Int?
     @Published var name: String
     @Published var nbDiners: Int
     @Published var image: String
@@ -74,7 +74,11 @@ class RecipeVM: ObservableObject, Subscriber {
             self.model.description = self.description
             self.model.ingredientCost = self.ingredientCost
             self.model.duration = self.duration
+        case .stepAdding:
+            break
         }
+    
+        
 
         return .none // on arrête de traiter cette demande et on attend un nouveau send
     }

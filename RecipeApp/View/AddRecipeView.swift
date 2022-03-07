@@ -15,6 +15,8 @@ struct AddRecipeView: View {
     @State private var image : Image?
     @State private var inputImage : UIImage?
     @State private var imageName : String?
+    @State private var showView = false
+    @State private var number = -1;
     var recipeIntent : RecipeIntent
     
     var numberF: NumberFormatter = {
@@ -116,14 +118,23 @@ struct AddRecipeView: View {
                 }
                 
             }.padding()
-            Button("Ajouter"){
+            Button(action: {
                 Task{
                     URLSession.uploadImage(paramName: "file", fileName: recipe.image, image: inputImage!)
-                    await self.recipeIntent.intentToAdd(recipe: recipe.model)
+                    number = await self.recipeIntent.intentToAdd(recipe: recipe.model)!
+                    showView = true
                 }
+                
+                
+            }, label: {
+                Text("Ajouter")
+            })
+                .padding()
+                .disabled(recipe.name.isEmpty || recipe.description.isEmpty || inputImage == nil)
+            if showView{
+                NavigationLink("", destination: StepsView(recipe: RecipeVM(model: LightRecipe(numRecipe: number, name: recipe.name, nbDiners: recipe.nbDiners, image: recipe.image, category: recipe.category, description: recipe.description, ingredientCost: nil, duration: nil), steps: []), recipes: recipes), isActive: $showView)
             }
-            .padding()
-            .disabled(recipe.name.isEmpty)
+            
             Spacer()
         }
         .navigationTitle("Ajouter une recette")

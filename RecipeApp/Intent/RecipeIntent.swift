@@ -20,11 +20,13 @@ import Combine
 enum RecipeIntentState :  CustomStringConvertible, Equatable{
     case ready
     case recipeAdding
+    case stepAdding
     
     var description: String{
         switch self{
         case .ready: return "state: .ready"
         case .recipeAdding: return "state: .recipeAdding"
+        case .stepAdding: return "state .stepAdding"
         }
     }
 }
@@ -66,16 +68,22 @@ struct RecipeIntent{
         self.listState.subscribe(listViewModel)
     }
     
-    func intentToAdd(recipe: LightRecipe) async{
+    func intentToAdd(recipe: LightRecipe) async -> Int?{
         self.state.send(.recipeAdding)
         let request : Result<LightRecipe, Error> = await LightRecipeDAO.createRecipe(recipe: recipe)
         switch(request){
         case .success(let rec):
             print("recipe updated in db")
             self.listState.send(.newElement(rec))
+            return rec.numRecipe
         case .failure(let error):
             print(error)
-
+            return nil
         }
+    }
+    
+    func intentToAddSteps(recipe: RecipeVM) async{
+        var res = await StepDAO.postSteps(recipe: recipe)
+        print(res)
     }
 }
