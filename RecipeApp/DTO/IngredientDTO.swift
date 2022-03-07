@@ -16,6 +16,7 @@ struct IngredientDTO: Codable{
     var idUnit: IngredientUnit
     var stock: Double
     var ingredientInStep: IngredientInStep?
+    var quantity: Double?
 
     struct IngredientInStep : Codable {
         var quantity: Double

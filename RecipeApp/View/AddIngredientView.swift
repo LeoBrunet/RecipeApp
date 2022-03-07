@@ -10,7 +10,7 @@ import SwiftUI
 struct AddIngredientView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var ingredients: IngredientsVM
-    @ObservedObject var ingredient: IngredientVM = IngredientVM(model: Ingredient(numIngredient: nil, nameIngredient: "", unitePrice: 0, codeAllergen: Allergen.Aucun, idType: IngredientType.Autre, idUnit: IngredientUnit.kg, stock: 0))
+    @ObservedObject var ingredient: IngredientVM = IngredientVM(model: Ingredient(numIngredient: nil, nameIngredient: "", unitePrice: 0, codeAllergen: Allergen.Aucun, idType: IngredientType.Autre, idUnit: IngredientUnit.kg, stock: 0, quantity: nil))
     var ingredientIntent : IngredientIntent
     
     var numberF: NumberFormatter = {

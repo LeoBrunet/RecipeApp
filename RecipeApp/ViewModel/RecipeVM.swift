@@ -11,7 +11,6 @@ import Combine
 class RecipeVM: ObservableObject, Subscriber {
     
     var model : LightRecipe
-    @Published var steps : [Step]
     var numRecipe: Int?
     var name: String
     var nbDiners: Int
@@ -20,6 +19,9 @@ class RecipeVM: ObservableObject, Subscriber {
     var description: String
     var ingredientCost: Double?
     var duration: Int?
+    
+    @Published var steps : [Step]
+    @Published var ingredients : [Ingredient] = []
     
     init(model: LightRecipe, steps: [Step]) {
         self.model = model
@@ -32,7 +34,43 @@ class RecipeVM: ObservableObject, Subscriber {
         self.ingredientCost = model.ingredientCost
         self.duration = model.duration
         self.steps = steps
+        
+        if let ingredientCost = ingredientCost {
+            self.ingredientCost = Double(round(100*ingredientCost)/100)
+            self.flavoringCost =  Double(round(100*(ingredientCost*0.05))/100)
+            self.productCost = Double(round(100*(ingredientCost + flavoringCost))/100)
+            self.personnelCost = Double(round(100*(Double(duration!) * averageMinuteRate))/100)
+            self.fluidCost = Double(round(100*(Double(duration!) * averageMinuteRateFluid))/100)
+            self.chargesCost = Double(round(100*(personnelCost + fluidCost))/100)
+            self.totalCost = Double(round(100*(chargesCost + productCost))/100)
+            
+            self.price = Double(round(100*(totalCost*sellingPriceMultiplierCoefficient))/100)
+        } else {
+            self.ingredientCost = 0
+            self.flavoringCost =  0
+            self.productCost = 0
+            self.personnelCost = 0
+            self.fluidCost = 0
+            self.chargesCost = 0
+            self.totalCost = 0
+            
+            self.price = 0
+        }
+        
     }
+    
+    let averageMinuteRate: Double = 0.175
+    let averageMinuteRateFluid: Double = 0.0198
+    let sellingPriceMultiplierCoefficient: Double = 1.3
+    
+    var flavoringCost: Double
+    var productCost: Double
+    var personnelCost: Double
+    var fluidCost: Double
+    var chargesCost: Double
+    var totalCost: Double
+    
+    var price: Double
     
     typealias Input = IngredientIntentState
     typealias Failure = Never
@@ -47,6 +85,33 @@ class RecipeVM: ObservableObject, Subscriber {
 
         case .failure(let error):
             print(error)
+        }
+    }
+    
+    func getIngredientsOfRecipe(recipeNum: Int) async {
+        let request : Result<[Ingredient], Error> = await IngredientDAO.getIngredientsOfRecipe(recipeNum: recipeNum)
+        
+        switch(request){
+
+        case .success(let ingredients):
+            self.ingredients = ingredients
+
+        case .failure(let error):
+            print(error)
+        }
+    }
+    
+    func sell(sale: Sale) async -> Bool {
+        
+        let request : Result<Sale, Error> = await SaleDAO.sell(sale: sale)
+        switch(request){
+        case .success(_):
+            print("sale made")
+            return true
+            
+        case .failure(let error):
+            print(error)
+            return false
         }
     }
     

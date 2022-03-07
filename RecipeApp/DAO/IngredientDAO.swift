@@ -10,7 +10,15 @@ import Foundation
 struct IngredientDAO{
     
     static func DTOToIngredient(ingDTO: IngredientDTO) -> Ingredient{
-        return Ingredient(numIngredient: ingDTO.numIngredient, nameIngredient: ingDTO.nameIngredient, unitePrice: ingDTO.unitePrice, codeAllergen: ingDTO.codeAllergen, idType: ingDTO.idType, idUnit: ingDTO.idUnit, stock: ingDTO.stock)
+        if let ingredientInStep = ingDTO.ingredientInStep {
+            return Ingredient(numIngredient: ingDTO.numIngredient, nameIngredient: ingDTO.nameIngredient, unitePrice: ingDTO.unitePrice, codeAllergen: ingDTO.codeAllergen, idType: ingDTO.idType, idUnit: ingDTO.idUnit, stock: ingDTO.stock, quantity: ingredientInStep.quantity)
+        }
+        else if let quantity = ingDTO.quantity{
+            return Ingredient(numIngredient: ingDTO.numIngredient, nameIngredient: ingDTO.nameIngredient, unitePrice: ingDTO.unitePrice, codeAllergen: ingDTO.codeAllergen, idType: ingDTO.idType, idUnit: ingDTO.idUnit, stock: ingDTO.stock, quantity: quantity)
+        }
+        else {
+            return Ingredient(numIngredient: ingDTO.numIngredient, nameIngredient: ingDTO.nameIngredient, unitePrice: ingDTO.unitePrice, codeAllergen: ingDTO.codeAllergen, idType: ingDTO.idType, idUnit: ingDTO.idUnit, stock: ingDTO.stock, quantity: 0)
+        }
     }
     
     static func IngredientToDTO(ingredient: Ingredient) -> IngredientDTO{
@@ -29,11 +37,25 @@ struct IngredientDAO{
         let request : Result<[IngredientDTO], JSONError> = await JSONHelper.get(url: "ingredient")
         
         switch(request){
-
+            
         case .success(let ingredientsDTO):
             return .success(IngredientDAO.DTOListToIngredients(ingredientsDTO: ingredientsDTO))
-
-
+            
+            
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    static func getIngredientsOfRecipe(recipeNum: Int) async -> Result<[Ingredient],Error>{
+        let request : Result<[IngredientDTO], JSONError> = await JSONHelper.get(url: "recipe/ingredients/"+String(recipeNum))
+        
+        switch(request){
+            
+        case .success(let ingredientsDTO):
+            return .success(IngredientDAO.DTOListToIngredients(ingredientsDTO: ingredientsDTO))
+            
+            
         case .failure(let error):
             return .failure(error)
         }
@@ -43,11 +65,11 @@ struct IngredientDAO{
         let request : Result<IngredientDTO, JSONError> = await URLSession.shared.create(urlEnd: "ingredient/", data: IngredientToDTO(ingredient: ingredient))
         
         switch(request){
-
+            
         case .success(let updated):
             return .success(DTOToIngredient(ingDTO: updated))
-
-
+            
+            
         case .failure(let error):
             return .failure(error)
         }
@@ -58,11 +80,11 @@ struct IngredientDAO{
         let request : Result<Bool, JSONError> = await URLSession.shared.update(urlEnd: "ingredient/" + String(ingredient.numIngredient!), data: IngredientToDTO(ingredient: ingredient))
         
         switch(request){
-
+            
         case .success(let updated):
             return .success(updated)
-
-
+            
+            
         case .failure(let error):
             return .failure(error)
         }
