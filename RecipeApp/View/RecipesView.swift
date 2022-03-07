@@ -21,7 +21,7 @@ struct RecipesView: View {
     }
     
     var body: some View {
-        VStack{
+        ScrollView{
             ForEach(Array(recipes.enumerated()), id:\.element.numRecipe){ index, recipe in
                 NavigationLink(destination: RecipeView(recipe: recipe)){
                     ProductCard(image: recipe.image, title: recipe.name, nbDiners: recipe.nbDiners, price: recipe.ingredientCost!)

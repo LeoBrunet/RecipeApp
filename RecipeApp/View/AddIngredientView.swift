@@ -112,6 +112,7 @@ struct AddIngredientView: View {
                 .disabled(ingredient.nameIngredient.isEmpty)
                 Spacer()
             }
+            .accentColor(Color("Green"))
             .navigationTitle("Ajouter un ingrédient")
             .toolbar{
                 Button("Annuler") {

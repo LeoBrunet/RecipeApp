@@ -13,6 +13,10 @@ struct LightRecipeDAO{
         return LightRecipe(numRecipe: recipeDTO.numRecipe, name: recipeDTO.name, nbDiners: recipeDTO.nbDiners, image: recipeDTO.image, category: recipeDTO.idCategory, description: recipeDTO.description, ingredientCost: recipeDTO.ingredientCost, duration: recipeDTO.duration)
     }
     
+    static func RecipeToDTO(recipe: LightRecipe) -> LightRecipeDTO{
+        return LightRecipeDTO(numRecipe: recipe.numRecipe, name: recipe.name, nbDiners: recipe.nbDiners, image: recipe.image, idCategory: recipe.category, description: recipe.description, ingredientCost: recipe.ingredientCost, duration: recipe.duration)
+    }
+    
     static func DTOListToRecipes(recipesDTO: [LightRecipeDTO]) -> [LightRecipe]{
         var recipes : [LightRecipe] = []
         recipesDTO.forEach({
@@ -33,6 +37,20 @@ struct LightRecipeDAO{
 
         case .failure(let error):
             print(error)
+            return .failure(error)
+        }
+    }
+    
+    static func createRecipe(recipe: LightRecipe) async -> Result <LightRecipe, Error>{
+        let request : Result<LightRecipeDTO, JSONError> = await URLSession.shared.create(urlEnd: "recipe/", data: RecipeToDTO(recipe: recipe))
+        
+        switch(request){
+
+        case .success(let created):
+            return .success(DTOToRecipe(recipeDTO: created))
+
+
+        case .failure(let error):
             return .failure(error)
         }
     }

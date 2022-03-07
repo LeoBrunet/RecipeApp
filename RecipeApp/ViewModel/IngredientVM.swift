@@ -18,6 +18,7 @@ class IngredientVM: ObservableObject, Subscriber, IngredientObserver{
     @Published var idType: IngredientType
     @Published var idUnit: IngredientUnit
     @Published var stock: Double
+    @Published var quantity: Double = 0
     
     init(model: Ingredient){
         self.model = model
