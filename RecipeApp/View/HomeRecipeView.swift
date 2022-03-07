@@ -11,6 +11,7 @@ struct HomeRecipeView: View {
     
     @StateObject var recipesVM: LightRecipesVM = LightRecipesVM()
     let gradient = Gradient(colors: [.black, .clear])
+    @State var isActive = false
     
     var firstRecipes: [LightRecipe] {
         return self.recipesVM.recipes.suffix(3)
@@ -71,7 +72,12 @@ struct HomeRecipeView: View {
                                     Spacer()
                                 }.padding(5)
                                 Spacer()
-                            }.background(.gray.opacity(0.1)).cornerRadius(5)
+                            }
+                            .background(.gray.opacity(0.1)).cornerRadius(5)
+                            .onTapGesture(){
+                                isActive = true
+                            }
+                            NavigationLink(isActive: $isActive, destination: { RecipeView(recipe: lastRecipe) }, label: { EmptyView() })
                         }
                     }
                     

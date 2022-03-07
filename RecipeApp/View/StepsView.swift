@@ -149,9 +149,13 @@ struct AddDescriptionStepView: View{
         //        self.ingredientIntent.addObserver(viewModel: self.ingredient, listViewModel: self.ingredients)
     }
     
+    func delete(at offsets: IndexSet) {
+        step.ingredients.remove(atOffsets: offsets)
+    }
+    
     var body: some View {
         NavigationView{
-            VStack{
+            ScrollView{
                 VStack(alignment: .leading){
                     HStack{
                         VStack(alignment: .leading){
@@ -193,7 +197,7 @@ struct AddDescriptionStepView: View{
                             Button("Ajouter l'ingrédient"){
                                 step.ingredients.append(Ingredient(numIngredient: ingredient.numIngredient, nameIngredient: ingredient.nameIngredient, unitePrice: ingredient.unitePrice, codeAllergen: ingredient.codeAllergen, idType: ingredient.idType, idUnit: ingredient.idUnit, stock: ingredient.stock, quantity: quantity))
                             }
-                        }
+                        }.frame(minHeight: UIScreen.main.bounds.height/6)
                         
                         List{
                             ForEach(step.ingredients, id: \.numIngredient) { value in
@@ -205,7 +209,8 @@ struct AddDescriptionStepView: View{
                                 }
                                 
                             }
-                        }
+                            .onDelete(perform: delete)
+                        }.frame(minHeight: UIScreen.main.bounds.height/6)
                     }
                 }.padding()
                 Button("Ajouter"){
