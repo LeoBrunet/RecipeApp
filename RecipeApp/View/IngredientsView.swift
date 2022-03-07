@@ -145,7 +145,7 @@ struct CategoryView: View {
                 }
             }
             .environment(\.editMode, $editMode)
-            .navigationTitle("Catégorie")
+            .navigationTitle("Catégories")
             .toolbar{
                 Button("Ok") {
                     dismiss()

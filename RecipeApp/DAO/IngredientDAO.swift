@@ -33,6 +33,14 @@ struct IngredientDAO{
         return ingredients
     }
     
+    static func IngredientsToDTOPost(ingredients : [Ingredient]) -> [IngredientPostDTO]{
+        var ingredientsDTO : [IngredientPostDTO] = []
+        ingredients.forEach({
+            ingredientsDTO.append(IngredientPostDTO(numIngredient: $0.numIngredient!, quantity: $0.quantity ?? 0))
+        })
+        return ingredientsDTO
+    }
+    
     static func getIngredients() async -> Result<[Ingredient],Error>{
         let request : Result<[IngredientDTO], JSONError> = await JSONHelper.get(url: "ingredient")
         
