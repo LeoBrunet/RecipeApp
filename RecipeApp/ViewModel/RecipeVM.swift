@@ -22,7 +22,6 @@ class RecipeVM: ObservableObject, Subscriber {
     var ingredientCost: Double?
     var duration: Int?
     
-    @Published var steps : [Step]
     @Published var ingredients : [Ingredient] = []
     
     init(model: LightRecipe, steps: [Step]) {
