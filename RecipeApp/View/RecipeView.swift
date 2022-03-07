@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipeView: View {
     @ObservedObject var recipeVM: RecipeVM
     @State private var selectedIndex = 0
-    private var viewArray = ["Etapes"/*, "Ingrédients", */,"Coûts"]
+    private var viewArray = ["Etapes", "Ingrédients", "Coûts", "Vendre"]
     
     init(recipe: LightRecipe) {
         self.recipeVM = RecipeVM(model: recipe, steps: [])
@@ -32,10 +32,11 @@ struct RecipeView: View {
                 ImageView(url: "https://nicolas-ig.alwaysdata.net/api/file/"+recipeVM.model.image)
             }.frame(height: 400)
             VStack(alignment: .leading) {
-                Text(recipeVM.model.name)
-                    .bold().font(.title2)
-                    .padding(.top, 5)
-                
+                HStack{
+                    Text(recipeVM.model.name)
+                        .bold().font(.title2)
+                        .padding(.top, 5)
+                }
                 
                 Text(recipeVM.model.description)
                     .padding(.top, 5)
@@ -65,14 +66,13 @@ struct RecipeView: View {
                 
             }.padding(10).cornerRadius(10)
             
+            
         }
         .edgesIgnoringSafeArea(.top)
         .onAppear {
             if recipeVM.steps.count == 0 {
                 Task {
                     await recipeVM.getSteps(numRecipe: recipeVM.model.numRecipe!)
-                    print(recipeVM.steps)
-                    print(recipeVM.steps.count)
                 }
             }
         }
@@ -82,6 +82,10 @@ struct RecipeView: View {
     private func getViewSelected(selectedIndex: Int) -> some View {
         if(selectedIndex == 0){
             RecipeStepsView(recipeVM: recipeVM)
+        } else if (selectedIndex == 1){
+            RecipeIngredientsView(recipeVM: recipeVM)
+        } else if (selectedIndex == 3){
+            RecipeSellView(recipeVM: recipeVM)
         } else {
             RecipeCostsView(recipeVM: recipeVM)
         }
@@ -101,12 +105,69 @@ struct RecipeStepsView : View {
             VStack(alignment: .leading){
                 Text(step.name + " (" + String(step.duration) + " min)")
                     .bold()
+                hasIngredients(nbIngredients: step.ingredients.count, step: step)
                 Text(step.description)
-                Divider()
-                
             }
+            Divider()
         }
         .padding(.top, 5)
+    }
+    
+    @ViewBuilder
+    private func hasIngredients(nbIngredients: Int, step: Step) -> some View {
+        if(nbIngredients > 0){
+            HasIngredients(step: step)
+        } else {
+            EmptyView()
+        }
+    }
+}
+
+struct HasIngredients : View {
+    var step : Step
+    
+    init(step: Step){
+        self.step = step
+    }
+    var body : some View {
+        VStack(alignment: .leading){
+            Text("Ingrédients").bold()
+            ForEach(Array(step.ingredients.enumerated()), id:\.element.numIngredient){ index, ingredient in
+                Text(String(ingredient.quantity!) + ingredient.idUnit.name + " " + ingredient.nameIngredient)
+            }
+        }
+        .padding(10)
+        .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+        .cornerRadius(5)
+    }
+}
+
+struct RecipeIngredientsView : View {
+    
+    @ObservedObject var recipeVM: RecipeVM
+    
+    init(recipeVM: RecipeVM){
+        self.recipeVM = recipeVM
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading){
+            Text("Ingrédients").bold()
+            ForEach(Array(recipeVM.ingredients.enumerated()), id:\.element.numIngredient!){ index, ingredient in
+                Text(String(ingredient.quantity!) + ingredient.idUnit.name + " " + ingredient.nameIngredient)
+            }
+        }
+        .padding(10)
+        .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
+        .cornerRadius(5)
+        .onAppear {
+            if recipeVM.ingredients.count == 0 {
+                Task {
+                    await recipeVM.getIngredientsOfRecipe(recipeNum: recipeVM.model.numRecipe!)
+                    print(recipeVM.ingredients.count)
+                }
+            }
+        }
     }
 }
 
@@ -117,51 +178,68 @@ struct RecipeCostsView : View {
     
     init(recipeVM: RecipeVM){
         self.recipeVM = recipeVM
-        self.duration = recipeVM.model.duration!
-        self.ingredientCost = Double(round(100*recipeVM.model.ingredientCost!)/100)
-        self.flavoringCost =  Double(round(100*(ingredientCost*0.05))/100)
-        self.productCost = Double(round(100*(ingredientCost + flavoringCost))/100)
-        self.personnelCost = Double(round(100*(Double(duration) + averageMinuteRate))/100)
-        self.fluidCost = Double(round(100*(Double(duration) + averageMinuteRateFluid))/100)
-        self.chargesCost = Double(round(100*(personnelCost + fluidCost))/100)
-        self.totalCost = Double(round(100*(chargesCost + productCost))/100)
     }
-    
-    let averageMinuteRate: Double = 0.175
-    let averageMinuteRateFluid: Double = 0.0198
-    var ingredientCost: Double
-    var duration: Int
-    
-    var flavoringCost: Double
-    var productCost: Double
-    var personnelCost: Double
-    var fluidCost: Double
-    var chargesCost: Double
-    var totalCost: Double
     
     var body : some View {
         LazyVGrid(columns: columns, alignment: .leading){
             Group{
                 Group{
-                    Text("Coût des matières").bold() ; Text(String(productCost)+"€").bold()
-                    Text("  Coût des ingrédients") ; Text(String(ingredientCost)+"€")
-                    Text("  Coût de l'assaisonnement (5%)") ; Text(String(flavoringCost) + "€")
+                    Text("Coût des matières").bold() ; Text(String(recipeVM.productCost)+"€").bold()
+                    Text("  Coût des ingrédients") ; Text(String(recipeVM.ingredientCost!)+"€")
+                    Text("  Coût de l'assaisonnement (5%)") ; Text(String(recipeVM.flavoringCost) + "€")
                 }
                 Divider()
                 Divider()
                 Group{
-                    Text("Coût des charges").bold() ; Text(String(chargesCost)+"€").bold()
-                    Text("  Coût du personnel") ; Text(String(personnelCost)+"€")
-                    Text("  Coût des fluides") ; Text(String(fluidCost)+"€")
+                    Text("Coût des charges").bold() ; Text(String(recipeVM.chargesCost)+"€").bold()
+                    Text("  Coût du personnel") ; Text(String(recipeVM.personnelCost)+"€")
+                    Text("  Coût des fluides") ; Text(String(recipeVM.fluidCost)+"€")
                 }
                 Divider()
                 Divider()
-                Text("Total").bold() ; Text(String(totalCost)+"€").bold()
+                Text("Total").bold() ; Text(String(recipeVM.totalCost)+"€").bold()
             }.padding(.leading, 5)
         }
         .padding(5)
         .background(Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, opacity: 1.0))
         .cornerRadius(5)
+    }
+}
+
+struct RecipeSellView : View {
+    
+    @State var qte: Int = 1
+    var recipeVM: RecipeVM
+    
+    init(recipeVM: RecipeVM){
+        self.recipeVM = recipeVM
+    }
+    
+    var body: some View {
+        HStack{
+            Text("Quantité : " + String(qte))
+            Stepper("Quantité", value: $qte, in: 1...99)
+                .labelsHidden()
+            Spacer()
+            NavigationLink(destination:SalesView()){
+            Button {
+                print("vend wsh" + String(qte))
+                Task{
+                    await recipeVM.sell(sale: Sale(numSale: 0, quantity: qte, date: Date.now, numRecipe: recipeVM.model.numRecipe!, nameRecipe: recipeVM.model.name, cost: recipeVM.totalCost, price: recipeVM.price))
+                }
+            } label: {
+                VStack(alignment:.leading){
+                    Text("Vendre")
+                        .cornerRadius(5)
+                        .padding(10)
+                        .foregroundColor(.white)
+                        .background(Color("Green"))
+                    
+                }
+            }
+            }
+            
+        }.padding(5)
     }
 }
 

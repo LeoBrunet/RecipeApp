@@ -18,7 +18,7 @@ struct SaleDTO: Codable {
     var cost: Double
     var price: Double
     
-    let recipe: LightRecipe
+    let recipe: LightRecipe?
 }
 //    var sale : Sale{
 //        return Sale(numSale: numSale, quantity: quantity, date: date, numRecipe: numRecipe, nameRecipe: nameRecipe, cost: cost, price: price)

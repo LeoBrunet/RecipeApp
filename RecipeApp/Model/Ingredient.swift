@@ -138,11 +138,15 @@ enum IngredientUnit: Int, Codable, CaseIterable{
             case .Unité:
                 return "unt"
             case .Botte:
-                return " bt"
+                return "bt"
             case .Pincée:
-                return " pincée"
+                return "pincée"
         }
     }
+    
+    /*init(rawValue: idUnit){
+        
+    }*/
 }
 
 protocol IngredientObserver{
@@ -201,6 +205,7 @@ class Ingredient : Comparable, Hashable{
             lhs.nameIngredient < rhs.nameIngredient
         }
     
+
     init(numIngredient: Int?, nameIngredient: String, unitePrice: Double, codeAllergen: Allergen? = nil, idType: IngredientType, idUnit: IngredientUnit, stock: Double, quantity: Double? = 0) {
         self.numIngredient = numIngredient
         self.nameIngredient = nameIngredient
